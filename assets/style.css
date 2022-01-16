@@ -1,0 +1,105 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  text-align: center;
+}
+body{
+  background: rgb(194, 161, 161);
+  font-family: 'Roboto', sans-serif;
+}
+header{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  min-width: 375px;
+}
+header .navlinks,
+header .img{
+  width: 50%;
+  height: 100vh;
+}
+.navlinks{
+  background-color: #1D1E22;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+img{
+  height: 100%;
+  width: 100%;
+  object-fit:cover;
+}
+.navlinks a{
+  text-decoration: none;
+  font-family: sans-serif;
+  text-transform: capitalize;
+  padding: 20px 30px;
+  background: transparent;
+  border: 1px solid #FFF;
+  color: #FFF;
+  width: 200px;
+  text-align: center;
+  letter-spacing: 1px;
+  font-size: 1.1rem;
+  font-weight: light;
+  display: block;
+  margin: 5px auto;
+  border-radius: 40px;
+  transition:  0.5s linear;
+}
+
+.navlinks a:hover{
+  background: rgba(255, 255, 255,0.9);
+    color: rgb(29, 30, 34);}
+.active{
+    color: #000;
+}
+
+@media(max-width:768px){
+  header{
+    position: relative;
+  }
+  header .navlinks,
+  header .img{
+  width: 100%;
+  height: 100vh;
+}
+header .navlinks{
+  position: absolute;
+  z-index: 1;
+  background: rgba(29, 30, 34,0.8);
+}
+  
+}
+
+h1{
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #FFF;
+  margin-bottom: 20px;
+}
+p{
+  font-size: 1.2rem;
+  color: rgb(0, 0, 0);
+  margin-bottom: 20px;
+}
+li{
+  list-style: none;
+  font-size: 1.2rem;
+
+}
+
+i{
+  text-align: center;
+  padding: 10px;
+  font-size: 60px;
+
+}
+button{
+  position: relative;
+  top: 10%;
+  left: 0%;
+}
