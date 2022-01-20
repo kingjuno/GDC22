@@ -5,4 +5,4 @@ Run: `python3 app.py`
 Didn't style all pages.
 
 ### Demo
-![]('demo.gif')
+![](https://github.com/kingjuno/GDC22/blob/master/GDC-Level-2-1/demo.gif)
