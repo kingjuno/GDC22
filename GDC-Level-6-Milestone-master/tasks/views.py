@@ -8,6 +8,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.views.generic import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
+from numpy import delete
 
 from tasks.models import Task
 
@@ -50,6 +51,25 @@ class GenericTaskUpdateView(AuthorisedTaskManager, UpdateView):
     fields = ["title", "description", "priority", "completed"]
     success_url = "/tasks"
 
+    def form_valid(self, form):
+        # print(form.cleaned_data)
+        self.object = form.save()
+        self.object.user = self.request.user
+        priority = self.object.priority
+        tasks = Task.objects.filter(
+            priority__gte=priority, user=self.request.user, deleted = False, completed = False
+            ).select_for_update().order_by("priority")
+
+        for task in tasks:
+            if task.priority <= priority:
+                task.priority += 1
+                priority += 1
+
+        Task.objects.bulk_update(tasks, ["priority"])
+        self.object.save()
+        print(self.object)
+        return HttpResponseRedirect(self.get_success_url())
+
 
 class GenericTaskCreateView(CreateView):
     model = Task
@@ -61,20 +81,17 @@ class GenericTaskCreateView(CreateView):
         self.object = form.save()
         self.object.user = self.request.user
         priority = self.object.priority
-        new_tasks = []
-        while Task.objects.filter(
-            priority = priority, user = self.request.user, deleted = False, completed = False
-        ).exists():
-            new_tasks.append(Task.objects.filter(
-                priority = priority, user = self.request.user, deleted = False, completed = False
-            ).first())
-            priority += 1
-        new_tasks.reverse()
-        for task in new_tasks:
-            task.priority += 1
-        Task.objects.bulk_update(new_tasks, ["priority"])
+        tasks = Task.objects.filter(
+            priority__gte=priority, user=self.request.user, deleted = False, completed = False
+            ).select_for_update().order_by("priority")
+
+        for task in tasks:
+            if task.priority <= priority:
+                task.priority += 1
+                priority += 1
+
+        Task.objects.bulk_update(tasks, ["priority"])
         self.object.save()
-        print(self.object)
         return HttpResponseRedirect(self.get_success_url())
 
 
