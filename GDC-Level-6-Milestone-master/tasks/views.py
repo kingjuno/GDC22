@@ -8,7 +8,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.views.generic import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
-from numpy import delete
+from django.db import transaction
 
 from tasks.models import Task
 
@@ -44,6 +44,26 @@ class GenericTaskDetailView(AuthorisedTaskManager, DetailView):
     model = Task
     template_name = "task_detail.html"
 
+def set_priority(priority, user):
+    tasks = []
+    with transaction.atomic():
+        task = Task.objects.select_for_update().get(
+            priority=priority,
+            user=user,
+            deleted = False,
+            completed = False
+        )
+        while task:
+            priority += 1
+            task.priority+=1
+            tasks.append(task)
+            task = Task.objects.select_for_update().get(
+                priority=priority,
+                user=user,
+                deleted = False,
+                completed = False
+            )
+    Task.objects.bulk_update(tasks, ["priority"])
 
 class GenericTaskUpdateView(AuthorisedTaskManager, UpdateView):
     model = Task
@@ -52,24 +72,11 @@ class GenericTaskUpdateView(AuthorisedTaskManager, UpdateView):
     success_url = "/tasks"
 
     def form_valid(self, form):
-        # print(form.cleaned_data)
+        if form.has_changed():
+            if "priority" in form.changed_data or ("completed" in form.changed_data and not form.instance.completed):
+                set_priority(form.instance.priority, self.request.user)
         self.object = form.save()
-        self.object.user = self.request.user
-        priority = self.object.priority
-        tasks = Task.objects.filter(
-            priority__gte=priority, user=self.request.user, deleted = False, completed = False
-            ).select_for_update().order_by("priority")
-
-        for task in tasks:
-            if task.priority <= priority:
-                task.priority += 1
-                priority += 1
-
-        Task.objects.bulk_update(tasks, ["priority"])
-        self.object.save()
-        print(self.object)
         return HttpResponseRedirect(self.get_success_url())
-
 
 class GenericTaskCreateView(CreateView):
     model = Task
@@ -80,17 +87,9 @@ class GenericTaskCreateView(CreateView):
     def form_valid(self, form):
         self.object = form.save()
         self.object.user = self.request.user
-        priority = self.object.priority
-        tasks = Task.objects.filter(
-            priority__gte=priority, user=self.request.user, deleted = False, completed = False
-            ).select_for_update().order_by("priority")
-
-        for task in tasks:
-            if task.priority <= priority:
-                task.priority += 1
-                priority += 1
-
-        Task.objects.bulk_update(tasks, ["priority"])
+        if form.cleaned_data["completed"] == False:
+            priority = self.object.priority
+            set_priority(priority, self.request.user)
         self.object.save()
         return HttpResponseRedirect(self.get_success_url())
 
