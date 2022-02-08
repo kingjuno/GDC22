@@ -9,6 +9,7 @@ from django.views.generic import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.db import transaction
+from itsdangerous import exc
 
 from tasks.models import Task
 
@@ -44,26 +45,28 @@ class GenericTaskDetailView(AuthorisedTaskManager, DetailView):
     model = Task
     template_name = "task_detail.html"
 
+
 def set_priority(priority, user):
     tasks = []
-    with transaction.atomic():
+    try:
         task = Task.objects.select_for_update().get(
-            priority=priority,
-            user=user,
-            deleted = False,
-            completed = False
+            priority=priority, user=user, deleted=False, completed=False
         )
-        while task:
+    except Task.DoesNotExist:
+        return 
+    with transaction.atomic():
+        while task.priority == priority:
             priority += 1
-            task.priority+=1
+            task.priority += 1
             tasks.append(task)
-            task = Task.objects.select_for_update().get(
-                priority=priority,
-                user=user,
-                deleted = False,
-                completed = False
-            )
+            try:
+                task = Task.objects.select_for_update().get(
+                    priority=priority, user=user, deleted=False, completed=False
+                )
+            except Task.DoesNotExist:
+                break
     Task.objects.bulk_update(tasks, ["priority"])
+
 
 class GenericTaskUpdateView(AuthorisedTaskManager, UpdateView):
     model = Task
@@ -73,10 +76,13 @@ class GenericTaskUpdateView(AuthorisedTaskManager, UpdateView):
 
     def form_valid(self, form):
         if form.has_changed():
-            if "priority" in form.changed_data or ("completed" in form.changed_data and not form.instance.completed):
+            if "priority" in form.changed_data or (
+                "completed" in form.changed_data and not form.instance.completed
+            ):
                 set_priority(form.instance.priority, self.request.user)
         self.object = form.save()
         return HttpResponseRedirect(self.get_success_url())
+
 
 class GenericTaskCreateView(CreateView):
     model = Task
@@ -102,7 +108,9 @@ class GenericTaskView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         search_term = self.request.GET.get("search")
         tasks = Task.objects.filter(deleted=False, user=self.request.user)
-        completed = Task.objects.filter(deleted=False, user=self.request.user, completed=True)
+        completed = Task.objects.filter(
+            deleted=False, user=self.request.user, completed=True
+        )
         if search_term:
             tasks = tasks.filter(title__icontains=search_term)
         return tasks, completed
