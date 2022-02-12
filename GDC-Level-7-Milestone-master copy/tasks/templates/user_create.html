@@ -1,0 +1,54 @@
+{% extends "template.html" %} {% block content %}
+<h1 class="text-4xl flex ml-[38%] mt-40 font-bold">Todo Manager</h1>
+<h3 class="text-2xl flex ml-[38%] mt-10">Signup</h3>
+<form action="" method="post">
+  <div class="flex ml-[38%] mt-10">
+    {{form.username.errors}}
+    <div style="display: block">
+      <label for="username" class="text-xl">Username</label><br />
+      {{form.username}}<br />
+      <div style="display: block" class="text-[#64748B] text-[12px]">
+        {{form.username.help_text}}
+      </div>
+    </div>
+  </div>
+  <div class="flex ml-[38%] mt-5">
+    {{form.password1.errors}}
+    <div style="display: block">
+      <label for="password" class="text-xl">Password</label><br />
+      {{form.password1}}
+      <div style="display: block" class="text-[#64748B] text-[12px]">
+        <ul class='list-disc' style="margin-left: 20px;">
+          <li>
+            Your password can't be too similar to your other personal
+            information.
+          </li>
+          <li>Your password must contain at least 8 characters.</li>
+          <li>Your password can't be a commonly used password.</li>
+          <li>Your password can't be entirely numeric.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="flex ml-[38%] mt-5">
+    {{form.password2.errors}}
+    <div style="display: block">
+      <label for="password" class="text-xl">Confirm Password</label><br />
+      {{form.password2}}
+    </div>
+  </div>
+  {% csrf_token %}
+  <div class="flex ml-[38%] mt-10">
+    <button
+      type="submit"
+      class="bg-red-500 text-white font-bold py-2 px-4 rounded-[12px] w-[382px] h-[57px]"
+    >
+      Sign Up
+    </button>
+  </div>
+</form>
+<!-- <form action="" method="post">
+    {{form.as_p}} {% csrf_token %}
+    <button type="submit">Signup</button>
+</form> -->
+{% endblock %}
