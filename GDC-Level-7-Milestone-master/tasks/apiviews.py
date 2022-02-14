@@ -62,12 +62,17 @@ class TaskListAPI(View):
 
 
 class TaskHistorySerializer(ModelSerializer):
-
-    task = TaskSerializer(read_only=True)
-
     class Meta:
         model = TaskHistory
-        fields = ["task", "updated_date", "new_status", "old_status"]
+        fields = "__all__"
+        read_only_fields = (
+            "id",
+            "task",
+            "updated_date",
+            "new_status",
+            "old_status",
+        )
+
 
 
 class TaskHistoryFilter(FilterSet):
