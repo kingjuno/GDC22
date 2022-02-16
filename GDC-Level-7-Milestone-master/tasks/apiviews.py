@@ -12,7 +12,7 @@ from django_filters.rest_framework import (
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.serializers import ModelSerializer
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
 from .models import STATUS_CHOICES, Task, TaskHistory
 
@@ -65,13 +65,6 @@ class TaskHistorySerializer(ModelSerializer):
     class Meta:
         model = TaskHistory
         fields = "__all__"
-        read_only_fields = (
-            "id",
-            "task",
-            "updated_date",
-            "new_status",
-            "old_status",
-        )
 
 
 
@@ -83,7 +76,7 @@ class TaskHistoryFilter(FilterSet):
     # something like 2022-02-12 would be enough for this to work
 
 
-class TaskHistoryViewSet(ModelViewSet):
+class TaskHistoryViewSet(ReadOnlyModelViewSet):
     queryset = TaskHistory.objects.all()
     serializer_class = TaskHistorySerializer
 
