@@ -72,4 +72,4 @@ class EmailReport(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     time = models.TimeField(null=True, blank=True, default=timezone.now)
     time_zone = models.CharField(max_length=100)
-
+    last_sent = models.DateTimeField(null=True, blank=True)
