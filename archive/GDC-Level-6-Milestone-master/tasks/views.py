@@ -9,7 +9,6 @@ from django.views.generic import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.db import transaction
-from itsdangerous import exc
 
 from tasks.models import Task
 
