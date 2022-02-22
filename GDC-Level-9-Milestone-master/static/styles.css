@@ -1,0 +1,32 @@
+input {
+  width: 382px;
+  height: 48px;
+  background: #f1f5f9;
+  border-radius: 12px;
+}
+
+#id_description {
+  background: #f1f5f9;
+  width: 382px;
+  border-radius: 12px;
+}
+
+#id_completed {
+  background: #f1f5f9;
+  width: 25px;
+  height: 24px;
+  border-radius: 4px;
+}
+
+[type="checkbox"]
+{
+    vertical-align:middle;
+}
+
+#logoutask{
+  display: inline-block;
+  color:#EF4444;
+  font-weight: 500;
+  font-size: 20px;
+  font-family: Inter;
+}

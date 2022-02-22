@@ -1,0 +1,51 @@
+{% extends "template.html" %} 
+{% block content %}
+<h1 class="text-4xl flex ml-[38%] mt-20 font-bold">Update Todo</h1>
+<form action="" method="post">
+  <div class="flex ml-[38%] mt-10">
+    {{form.title.errors}}
+    <div style="display: block">
+      <label for="username" class="text-xl">Title</label><br />
+      {{form.title}}<br />
+    </div>
+  </div>
+  <div class="flex ml-[38%] mt-5">
+    {{form.description.errors}}
+    <div style="display: block">
+      <label for="description" class="text-xl">Description</label><br />
+      {{form.description.as_textarea}}
+    </div>
+  </div>
+  <div class="flex ml-[38%] mt-5">
+    {{form.priority.errors}}
+    <div style="display: block">
+      <label for="priority" class="text-xl">Priority</label><br />
+      {{form.priority}}
+    </div>
+  </div>
+  <div class="flex ml-[38%] mt-5">
+    {{form.status.errors}}
+    <div style="display: block">
+      <label for="status" class="text-xl">Status</label>
+      {{form.status}}
+    </div>
+  </div>
+  <!-- completed button -->
+    <div class="flex ml-[38%] mt-5">
+        {{form.completed.errors}}
+        <!-- <div style="display: inline-block">
+         -->
+        <label for="completed" class="text-xl">{{form.completed}}&nbsp;&nbsp;Completed</label>
+        <!-- </div> -->
+    </div>
+  {% csrf_token %}
+  <div class="flex ml-[38%] mt-10">
+    <button
+      type="submit"
+      class="bg-red-500 text-white font-bold py-2 px-4 rounded-[12px] w-[382px] h-[57px]"
+    >
+      Add
+    </button>
+  </div>
+</form>
+{% endblock %}

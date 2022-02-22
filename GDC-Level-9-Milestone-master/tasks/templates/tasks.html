@@ -1,0 +1,188 @@
+{% extends "template.html" %} {% block content %}
+<div class="flex-1 h-screen justify-center items-center">
+  <div class="flex ml-[30%] mt-20">
+    <h1 class="text-4xl font-bold" style="min-width:140px;font-size: 40px;max-width: 140px;">
+      Hi {{user}}
+    </h1>
+    <a id="logoutask" class="ml-[190px]" style="min-width:100px;max-width: 100px;" href="/user/logout">Log out</a>
+  </div>
+  <div class="ml-[30%] mt-10 text-[#475569]">
+    {{tasks.1|length}} of {{tasks.0|length}} tasks completed
+  </div>
+  <div class="flex ml-[30%] mt-10">
+    <button
+      class="bg-[#FFE4E6] mr-[60px] border-slate-300 hover:border-indigo-500 text-[#EF4444] font-bold py-2 px-4 rounded-[35px] text-[20px]"
+      onclick="changediv(0)">
+      All
+    </button>
+    <button class="mr-[60px] text-black py-2 px-4 text-[20px]" onclick="changediv(1)">
+      Pending
+    </button>
+    <button class="text-black py-2 px-4 text-[20px]" onclick="changediv(2)">
+      Completed
+    </button>
+  </div>
+  <div id="tasks-list">
+    <div class="ml-[30%] mt-10">
+      {% for task in tasks.0 %}
+      <div class="flex bg-[#F1F5F9] px-4 py-4 w-[420px] mt-10 h-[89px] rounded-[16px]">
+        <div class="flex-1 mr-0">
+          {% if task.completed == 0 %}
+          <div class="text-[20px] mr-0">{{task.title}}</div>
+          {% else %}
+          <div class="text-[20px] mr-0 text-[#EF4444] line-through">
+            {{task.title}}
+          </div>
+          {% endif %}
+          <div class="text-[16px] mr-0 text-[#64748B]">
+            {{task.created_date|date:"D d M"}}
+          </div>
+        </div>
+        <div class="flex-1 ml-40 mr-0 space-x-4 py-3">
+          <button onclick="location.href='/update-task/{{task.id}}'">
+            <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="40" height="40" rx="8" fill="#2DD4BF" />
+              <path
+                d="M24.1667 12.5C24.3856 12.2811 24.6455 12.1075 24.9314 11.9891C25.2174 11.8706 25.5239 11.8096 25.8334 11.8096C26.1429 11.8096 26.4494 11.8706 26.7354 11.9891C27.0214 12.1075 27.2812 12.2811 27.5001 12.5C27.719 12.7189 27.8926 12.9787 28.011 13.2647C28.1295 13.5506 28.1904 13.8571 28.1904 14.1667C28.1904 14.4762 28.1295 14.7827 28.011 15.0687C27.8926 15.3546 27.719 15.6145 27.5001 15.8333L16.2501 27.0833L11.6667 28.3333L12.9167 23.75L24.1667 12.5Z"
+                stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+          <button onclick="location.href='/delete-task/{{task.id}}'">
+            <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="40" height="40" rx="8" fill="#F43F5E" />
+              <path
+                d="M16.6667 15V13.3333C16.6667 12.8913 16.8423 12.4674 17.1549 12.1548C17.4675 11.8423 17.8914 11.6667 18.3334 11.6667H21.6667C22.1088 11.6667 22.5327 11.8423 22.8453 12.1548C23.1578 12.4674 23.3334 12.8913 23.3334 13.3333V15M25.8334 15V26.6667C25.8334 27.1087 25.6578 27.5326 25.3453 27.8452C25.0327 28.1577 24.6088 28.3333 24.1667 28.3333H15.8334C15.3914 28.3333 14.9675 28.1577 14.6549 27.8452C14.3423 27.5326 14.1667 27.1087 14.1667 26.6667V15H25.8334Z"
+                stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  <div class="flex ml-[30%] mt-10">
+    <button class="bg-[#EF4444] w-[420px] h-[57px] text-white py-2 px-4 rounded-[12px] text-[20px]"
+      onclick="location.href='/create-task'">
+      Add
+    </button>
+  </div>
+
+
+</div>
+<script>
+  function changediv(ind) {
+    console.log(ind);
+    if (ind == 0) {
+      var x = document.getElementById("tasks-list");
+      x.innerHTML = `
+      <div class="ml-[30%] mt-10">
+      {% for task in tasks.0 %}
+      <div class="flex bg-[#F1F5F9] px-4 py-4 w-[420px] mt-10 h-[89px] rounded-[16px]">
+        <div class="flex-1 mr-0">
+          {% if task.completed == 0 %}
+          <div class="text-[20px] mr-0">{{task.title}}</div>
+          {% else %}
+          <div class="text-[20px] mr-0 text-[#EF4444] line-through">
+            {{task.title}}
+          </div>
+          {% endif %}
+          <div class="text-[16px] mr-0 text-[#64748B]">
+            {{task.created_date|date:"D d M"}}
+          </div>
+        </div>
+        <div class="flex-1 ml-40 mr-0 space-x-4 py-3">
+          <button onclick="location.href='/update-task/{{task.id}}'">
+            <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="40" height="40" rx="8" fill="#2DD4BF" />
+              <path
+                d="M24.1667 12.5C24.3856 12.2811 24.6455 12.1075 24.9314 11.9891C25.2174 11.8706 25.5239 11.8096 25.8334 11.8096C26.1429 11.8096 26.4494 11.8706 26.7354 11.9891C27.0214 12.1075 27.2812 12.2811 27.5001 12.5C27.719 12.7189 27.8926 12.9787 28.011 13.2647C28.1295 13.5506 28.1904 13.8571 28.1904 14.1667C28.1904 14.4762 28.1295 14.7827 28.011 15.0687C27.8926 15.3546 27.719 15.6145 27.5001 15.8333L16.2501 27.0833L11.6667 28.3333L12.9167 23.75L24.1667 12.5Z"
+                stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+          <button onclick="location.href='/delete-task/{{task.id}}'">
+            <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="40" height="40" rx="8" fill="#F43F5E" />
+              <path
+                d="M16.6667 15V13.3333C16.6667 12.8913 16.8423 12.4674 17.1549 12.1548C17.4675 11.8423 17.8914 11.6667 18.3334 11.6667H21.6667C22.1088 11.6667 22.5327 11.8423 22.8453 12.1548C23.1578 12.4674 23.3334 12.8913 23.3334 13.3333V15M25.8334 15V26.6667C25.8334 27.1087 25.6578 27.5326 25.3453 27.8452C25.0327 28.1577 24.6088 28.3333 24.1667 28.3333H15.8334C15.3914 28.3333 14.9675 28.1577 14.6549 27.8452C14.3423 27.5326 14.1667 27.1087 14.1667 26.6667V15H25.8334Z"
+                stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+      `
+    }
+    if (ind == 1) {
+      var x = document.getElementById("tasks-list");
+      x.innerHTML = `
+      <div class="ml-[30%] mt-10">
+  {% for task in tasks.0 %}
+  {% if task.completed == 0 %}
+  <div class="flex bg-[#F1F5F9] px-4 py-4 w-[420px] mt-10 h-[89px] rounded-[16px]">
+    <div class="flex-1 mr-0">
+      <div class="text-[20px] mr-0">{{task.title}}</div>
+      <div class="text-[16px] mr-0 text-[#64748B]">{{task.created_date|date:"D  d M"}}</div>
+    </div>
+    <div class="flex-1 ml-40 mr-0 space-x-4">
+      <button onclick="location.href='/update-task/{{task.id}}'">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="40" height="40" rx="8" fill="#2DD4BF" />
+          <path
+            d="M24.1667 12.5C24.3856 12.2811 24.6455 12.1075 24.9314 11.9891C25.2174 11.8706 25.5239 11.8096 25.8334 11.8096C26.1429 11.8096 26.4494 11.8706 26.7354 11.9891C27.0214 12.1075 27.2812 12.2811 27.5001 12.5C27.719 12.7189 27.8926 12.9787 28.011 13.2647C28.1295 13.5506 28.1904 13.8571 28.1904 14.1667C28.1904 14.4762 28.1295 14.7827 28.011 15.0687C27.8926 15.3546 27.719 15.6145 27.5001 15.8333L16.2501 27.0833L11.6667 28.3333L12.9167 23.75L24.1667 12.5Z"
+            stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </button>
+      <button onclick="location.href='/delete-task/{{task.id}}'">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="40" height="40" rx="8" fill="#F43F5E" />
+          <path
+            d="M16.6667 15V13.3333C16.6667 12.8913 16.8423 12.4674 17.1549 12.1548C17.4675 11.8423 17.8914 11.6667 18.3334 11.6667H21.6667C22.1088 11.6667 22.5327 11.8423 22.8453 12.1548C23.1578 12.4674 23.3334 12.8913 23.3334 13.3333V15M25.8334 15V26.6667C25.8334 27.1087 25.6578 27.5326 25.3453 27.8452C25.0327 28.1577 24.6088 28.3333 24.1667 28.3333H15.8334C15.3914 28.3333 14.9675 28.1577 14.6549 27.8452C14.3423 27.5326 14.1667 27.1087 14.1667 26.6667V15H25.8334Z"
+            stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </button>
+      </div>
+  </div>
+  {% endif %}
+  {% endfor %}
+</div>
+      `;
+    }
+    if (ind == 2) {
+      var x = document.getElementById("tasks-list");
+      x.innerHTML = `
+      <div class="ml-[30%] mt-10">
+  {% for task in tasks.0 %}
+  {% if task.completed == 1 %}
+  <div class="flex bg-[#F1F5F9] px-4 py-4 w-[420px] mt-10 h-[89px] rounded-[16px]">
+    <div class="flex-1 mr-0">
+      <div class="text-[20px] mr-0">{{task.title}}</div>
+      <div class="text-[16px] mr-0 text-[#64748B]">{{task.created_date|date:"D  d M"}}</div>
+    </div>
+    <div class="flex-1 ml-40 mr-0 space-x-4">
+      <button onclick="location.href='/update-task/{{task.id}}'">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="40" height="40" rx="8" fill="#2DD4BF" />
+          <path
+            d="M24.1667 12.5C24.3856 12.2811 24.6455 12.1075 24.9314 11.9891C25.2174 11.8706 25.5239 11.8096 25.8334 11.8096C26.1429 11.8096 26.4494 11.8706 26.7354 11.9891C27.0214 12.1075 27.2812 12.2811 27.5001 12.5C27.719 12.7189 27.8926 12.9787 28.011 13.2647C28.1295 13.5506 28.1904 13.8571 28.1904 14.1667C28.1904 14.4762 28.1295 14.7827 28.011 15.0687C27.8926 15.3546 27.719 15.6145 27.5001 15.8333L16.2501 27.0833L11.6667 28.3333L12.9167 23.75L24.1667 12.5Z"
+            stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </button>
+      <button onclick="location.href='/delete-task/{{task.id}}'">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="40" height="40" rx="8" fill="#F43F5E" />
+          <path
+            d="M16.6667 15V13.3333C16.6667 12.8913 16.8423 12.4674 17.1549 12.1548C17.4675 11.8423 17.8914 11.6667 18.3334 11.6667H21.6667C22.1088 11.6667 22.5327 11.8423 22.8453 12.1548C23.1578 12.4674 23.3334 12.8913 23.3334 13.3333V15M25.8334 15V26.6667C25.8334 27.1087 25.6578 27.5326 25.3453 27.8452C25.0327 28.1577 24.6088 28.3333 24.1667 28.3333H15.8334C15.3914 28.3333 14.9675 28.1577 14.6549 27.8452C14.3423 27.5326 14.1667 27.1087 14.1667 26.6667V15H25.8334Z"
+            stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </button>
+      </div>
+  </div>
+  {% endif %}
+  {% endfor %}
+</div>
+      `;
+    }
+  }
+</script>
+{% endblock %}
